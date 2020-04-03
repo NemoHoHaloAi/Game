@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-# coding=utf-8
-
 import random,math
 
 def print_matrix(matrix):
-    print('==============================')
+    print('—'*19)
     for row in matrix:
-        print(row)
+        print('|'+' '.join([str(col) for col in row])+'|')
+    print('—'*19)
 
 def shuffle_number(_list):
     random.shuffle(_list)
@@ -23,11 +21,8 @@ def check(matrix,i,j,number):
     return True
 
 def build_game(matrix,i,j,number):
-    #print_matrix(matrix)
-    #print(i,j,number)
     if i>8 or j>8:
         return matrix
-    #_matrixs = []
     if check(matrix,i,j,number):
         _matrix = [[col for col in row] for row in matrix]
         _matrix[i][j] = number
@@ -39,11 +34,6 @@ def build_game(matrix,i,j,number):
                 return __matrix
     #return _matrixs
     return None
-
-number_list = [1,2,3,4,5,6,7,8,9]
-matrix = [([0]*9) for i in range(9)]
-
-#print_matrix(build_game(matrix,0,0,random.choice(number_list)))
 
 def give_me_a_game(blank_size=9):
     matrix_all = build_game(matrix,0,0,random.choice(number_list))
@@ -57,3 +47,8 @@ def give_me_a_game(blank_size=9):
         blank_ij.append((i,j))
         matrix_blank[i][j] = 0
     return matrix_all,matrix_blank,blank_ij
+
+number_list = [1,2,3,4,5,6,7,8,9]
+matrix = [([0]*9) for i in range(9)]
+if __name__ == "__main__":
+    print_matrix(build_game(matrix,0,0,random.choice(number_list)))

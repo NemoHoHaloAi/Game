@@ -6,14 +6,7 @@ import sys,random,math
 import pygame
 from pygame.color import THECOLORS as COLORS
 
-from build import give_me_a_game,check
-
-# init pygame
-pygame.init()
-
-# create screen 500*500
-SIZE = [900,1000]
-screen = pygame.display.set_mode(SIZE)
+from build import print_matrix,give_me_a_game,check
 
 def draw_background():
     # white background
@@ -28,6 +21,9 @@ def draw_background():
     pygame.draw.rect(screen,COLORS['black'],(0,300,900,300),5)
     pygame.draw.rect(screen,COLORS['black'],(0,600,900,300),5)
 
+def draw_choose():
+    pygame.draw.rect(screen,COLORS['blue'],(cur_j*100+5,cur_i*100+5,100-10,100-10),0)
+
 def check_win(matrix_all,matrix):
     if matrix_all == matrix:
         return True
@@ -40,9 +36,6 @@ def check_color(matrix,i,j):
         return COLORS['green']
     return COLORS['red']
 
-cur_i, cur_j = 0,0
-font80 = pygame.font.SysFont('Times', 80)
-font100 = pygame.font.SysFont('Times', 90)
 def draw_number():
     for i in range(len(MATRIX)):
         for j in range(len(MATRIX[0])):
@@ -51,50 +44,61 @@ def draw_number():
             x,y = j*100+30,i*100+10
             screen.blit(txt,(x,y))
 
-def draw_point():
+def draw_context():
     txt = font100.render('Blank:'+str(cur_blank_size)+'   Change:'+str(cur_change_size),True,COLORS['black'])
     x,y = 10,900
     screen.blit(txt,(x,y))
 
-
-cur_blank_size = int(sys.argv[1])
-cur_change_size = 0
-MATRIX_ANSWER,MATRIX,BLANK_IJ = give_me_a_game(blank_size=cur_blank_size)
-for row in MATRIX:
-    print(row)
-
-# main loop
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+if __name__ == "__main__":
+    # init pygame
+    pygame.init()
+    
+    # contant
+    SIZE = [900,1000]
+    font80 = pygame.font.SysFont('Times', 80)
+    font100 = pygame.font.SysFont('Times', 90)
+    
+    # create screen 500*500
+    screen = pygame.display.set_mode(SIZE)
+    
+    # variable parameter
+    cur_i, cur_j = 0,0
+    cur_blank_size = int(sys.argv[1])
+    cur_change_size = 0
+    
+    # matrix abount
+    MATRIX_ANSWER,MATRIX,BLANK_IJ = give_me_a_game(blank_size=cur_blank_size)
+    print(BLANK_IJ)
+    print_matrix(MATRIX)
+    
+    # main loop
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                break
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                cur_j,cur_i = int(event.pos[0]/100),int(event.pos[1]/100)
+            elif event.type == event.type == pygame.KEYUP:
+                if chr(event.key) in ['1','2','3','4','5','6','7','8','9'] and (cur_i,cur_j) in BLANK_IJ:
+                    MATRIX[cur_i][cur_j] = int(chr(event.key))
+                    cur_blank_size = sum([1 if col==0 or col=='0' else 0 for row in MATRIX for col in row])
+                    cur_change_size +=1
+        # background
+        draw_background()
+        # choose item
+        draw_choose()
+        # numbers
+        draw_number()
+        # point
+        draw_context()
+        # flip
+        pygame.display.flip()
+    
+        # check win or not
+        if check_win(MATRIX_ANSWER,MATRIX):
+            print('You win, smarty ass!!!')
             break
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            cur_j,cur_i = int(event.pos[0]/100),int(event.pos[1]/100)
-        elif event.type == event.type == pygame.KEYUP:
-            if chr(event.key) in ['1','2','3','4','5','6','7','8','9'] and (cur_i,cur_j) in BLANK_IJ:
-                MATRIX[cur_i][cur_j] = int(chr(event.key))
-                cur_blank_size = sum([1 if col==0 or col=='0' else 0 for row in MATRIX for col in row])
-                cur_change_size +=1
-    # background
-    draw_background()
-
-    # choose item
-    pygame.draw.rect(screen,COLORS['blue'],(cur_j*100+5,cur_i*100+5,100-10,100-10),0)
-
-    # numbers
-    draw_number()
-
-    # point
-    draw_point()
-
-    # flip
-    pygame.display.flip()
-
-    # check win or not
-    if check_win(MATRIX_ANSWER,MATRIX):
-        print('win')
-        break
-
-pygame.quit()
+    
+    pygame.quit()
