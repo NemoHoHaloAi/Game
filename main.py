@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# coding=utf-8
-
-import sys,random,math
+import sys
 
 import pygame
 from pygame.color import THECOLORS as COLORS

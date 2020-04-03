@@ -1,4 +1,4 @@
-import random,math
+import random
 
 def print_matrix(matrix):
     print('—'*19)
