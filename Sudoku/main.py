@@ -77,7 +77,7 @@ if __name__ == "__main__":
                 break
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 cur_j,cur_i = int(event.pos[0]/100),int(event.pos[1]/100)
-            elif event.type == event.type == pygame.KEYUP:
+            elif event.type == pygame.KEYUP:
                 if chr(event.key) in ['1','2','3','4','5','6','7','8','9'] and (cur_i,cur_j) in BLANK_IJ:
                     MATRIX[cur_i][cur_j] = int(chr(event.key))
                     cur_blank_size = sum([1 if col==0 or col=='0' else 0 for row in MATRIX for col in row])

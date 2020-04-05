@@ -25,8 +25,16 @@ def draw_pause():
     s = pygame.Surface(SIZE, pygame.SRCALPHA)
     s.fill((255,255,255,220))
     screen.blit(s, (0,0))
-    txt = font120.render('PAUSE',True,COLORS['black'])
+    txt = font120.render('PAUSE',True,COLORS['darkgray'])
     x,y = 550,400
+    screen.blit(txt,(x,y))
+
+def draw_dead():
+    s = pygame.Surface(SIZE, pygame.SRCALPHA)
+    s.fill((255,255,255,240))
+    screen.blit(s, (0,0))
+    txt = font120.render('YOU DEAD',True,COLORS['black'])
+    x,y = 450,400
     screen.blit(txt,(x,y))
 
 def rect_cover(rect1,rect2,up=True):
@@ -94,6 +102,7 @@ if __name__ == "__main__":
     running = True
     pause = False
     jump = False
+    dead = False
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -106,7 +115,7 @@ if __name__ == "__main__":
                     jump = True
 
         # update data
-        if not pause:
+        if not pause and not dead:
             count_time += frame
             tunnel_list = [x-speed if x-speed>-200 else 2100 for x in tunnel_list ]
 
@@ -126,8 +135,11 @@ if __name__ == "__main__":
         # point
         draw_context()
         # pause
-        if pause:
+        if not dead and pause:
             draw_pause()
+        # dead
+        if dead:
+            draw_dead()
         # flip
         pygame.display.flip()
 
@@ -136,7 +148,8 @@ if __name__ == "__main__":
 
         # check win or not
         if check_dead():
-            print('You dead, dumb ass!!!')
-            break
+            #print('You dead, dumb ass!!!')
+            #break
+            dead = True
     
     pygame.quit()
