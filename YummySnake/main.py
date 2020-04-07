@@ -106,7 +106,6 @@ def check_dead():
     for xy in wall_list:
         wall_rect = (xy[0]-WALL_WIDTH/2,xy[1]-WALL_WIDTH/2,WALL_WIDTH,WALL_HEIGHT)
         if rect_cover(snake_head_rect,wall_rect):
-            print('wall')
             return True
     # 头与自身
     for xy in snake_list[1:]:
@@ -175,17 +174,10 @@ if __name__ == "__main__":
                 elif event.key == K_DOWN:
                     if head in ['left','right']:
                         head = 'down'
-                # if chr(event.key) == 'j':
-                #     # turn left
-                #     head = DIRECTION[DIRECTION.index(head)-1]
-                # elif chr(event.key) == 'k':
-                #     # turn right
-                #     head = DIRECTION[(DIRECTION.index(head)+1)%len(DIRECTION)]
 
         # update data
         if not pause and not dead:
             count_time += frame*level
-            # by head
             first = snake_list[0]
             snake_list[1:] = snake_list[:-1]
             if head == 'up':
@@ -220,10 +212,7 @@ if __name__ == "__main__":
         pygame.time.delay(int(frame/level*1000))
 
         # check win or not
-        if check_dead():
-            #print('You dead, dumb ass!!!')
-            #break
-            dead = True
+        dead = check_dead()
 
         if check_food():
             add_food()
